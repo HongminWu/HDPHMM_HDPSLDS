@@ -9,7 +9,7 @@ function runstuff()
 clear;
 clc;
 close all;
-caseNumber = 2;  %Observation mode type 
+caseNumber = 7;  %Observation mode type 
 trial_vec = [1:10];
 saveDir = 'F:\Matlab\Emily B. Fox\HDPHMM_HDPSLDS_toolbox/saveDir';
 d = 5;

@@ -4,9 +4,7 @@
 %2. 
 function testing_1_model_VS_unknown_states()
 close all;
-clear;
-clc;
-
+global STATE
 %% declaration
 stateName = {'approach', 'rotation', 'insection', 'mating'};
 [approach, rotation, insertion, mating] = deal(1, 2, 3, 4);

@@ -38,7 +38,7 @@ else
 end
 
 % Compute marginal for first time point
-fwd_msg(:,1) = block_like(:,1) .* pi_init';
+fwd_msg(:,1) = block_like(:,1) .* pi_init';             % fisrt
 sum_fwd_msg = sum(fwd_msg(:,1));
 fwd_msg(:,1) = fwd_msg(:,1) / sum_fwd_msg;
 % Add the constant from normalizing the forward message:
@@ -48,12 +48,12 @@ neglog_c(1) = neglog_c(1)+log(sum_fwd_msg);
 for tt = 1:T-1
   
   % Integrate out z_t:  
-  partial_marg = pi_z' * fwd_msg(:,tt);
+  partial_marg    = pi_z' * fwd_msg(:,tt);
   % Multiply likelihood by incoming message:
-  fwd_msg(:,tt+1) = partial_marg.*block_like(:,tt+1);
+  fwd_msg(:,tt+1) = partial_marg.*block_like(:,tt+1);  %iteration
   
   %fwd_msg(:,tt+1) = pi_z * partial_marg;
-  sum_fwd_msg = sum(fwd_msg(:,tt+1));
+  sum_fwd_msg     = sum(fwd_msg(:,tt+1));
   fwd_msg(:,tt+1) = fwd_msg(:,tt+1) / sum_fwd_msg;
   
   % Add the constant from normalizing the forward message:
