@@ -9,7 +9,7 @@ tic;
     disp('........................................');
     disp('.');
     disp(strcat('Testing_Observations:', TESTING_DATASET_PATH));
- for testing_trial =12:12 % for testing each state
+ for testing_trial =7:7 % for testing each state
     close all;
     test_state(testing_trial)
  end

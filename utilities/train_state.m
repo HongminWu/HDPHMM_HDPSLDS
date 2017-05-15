@@ -7,7 +7,8 @@ function train_state(trialID, training_state, training_dataset_path, LearnedMode
 clc;
 close all;
 global rootPath saveDir METHOD
-global TRAINING_SIM_REAL TRAINING_SUCCESS_FAILURE TRAINING_PLOT_ON STATE TRUNCATION_STATES TRUNCATION_COMPONENTS Niter
+global TRAINING_SIM_REAL TRAINING_SUCCESS_FAILURE TRAINING_PLOT_ON STATE 
+global TRUNCATION_STATES TRUNCATION_COMPONENTS Niter
 [data, R_State, foldname]= load_one_trial(trialID, training_dataset_path);
 figure;
 subplot(3,1,1);
@@ -35,8 +36,10 @@ d = size(sensor,1); % number of dimensitionality.
 switch METHOD
     case 'sHDPHMM'
         caseNumber = 2;  %Observation mode type 
-    case 'HDPVARHMM'
-        caseNumber = 3;  %Observation mode type 
+    case 'HDPVARHMM(1)'
+        caseNumber = 3;  %Observation mode type
+    case 'HDPVARHMM(2)'
+        caseNumber = 4;  %Observation mode type
     case 'HDPSLDS'
 end
 cd (saveDir); delete *; cd (rootPath);
@@ -78,7 +81,7 @@ switch caseNumber
         priorType = 'MNIW-N';
         r = 2;
         K = inv(diag([0.1*ones(1,d*r)]));
-        sig0 = 3;
+        sig0 = 1;  %default: 3
         meanSigma = eye(d);
         Kz = TRUNCATION_STATES;
         
@@ -352,7 +355,7 @@ settings.trial = 1;  % Defines trial number, which is part of the filename used 
     total_log_likelihood, ...
     loglike_normalizer,   ... 
     dist_struct,obsModel, ...
-    data_struct] =  HDPHMMDPinference(data_struct, model, settings,char(STATE(training_state)));  
+    data_struct] =  HDPHMMDPinference(data_struct, model, settings,char(STATE(training_state)),trialID);  
 %% Postprocessing
 cd (LearnedModelPath);
 LearnedModelFile = strcat(TRAINING_SIM_REAL, '_', TRAINING_SUCCESS_FAILURE, '_',char(STATE(training_state)),'_',foldname,'.mat');

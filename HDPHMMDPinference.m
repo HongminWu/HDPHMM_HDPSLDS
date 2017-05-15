@@ -13,7 +13,8 @@
 %%%% in a structure of the form S(store_count).field(time_series).subfield
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [stateSeq, theta, hyperparams, neglog_c, total_log_likelihood,loglike_normalizer,dist_struct, obsModel, data_struct] = HDPHMMDPinference(data_struct,model,settings, stateName, restart)
+function [stateSeq, theta, hyperparams, neglog_c, total_log_likelihood,loglike_normalizer,dist_struct, obsModel, data_struct] = HDPHMMDPinference(data_struct,model,settings, stateName, trialID, restart)
+global DIS_PERIOD
 trial = settings.trial;
 if ~isfield(settings,'saveMin')
     settings.saveMin = 1;
@@ -173,9 +174,11 @@ end
 %%%                   Run Sampler                            %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for n=n_start:Niter
-
-    DISP = ['Training State: ', stateName, '-Gibbs-Sampling:', num2str(n), '/', num2str(Niter)];
-    disp(DISP);
+    
+    if (rem(n, DIS_PERIOD) == 0)
+        DISP = [num2str(trialID),'-Training State: ', stateName, '-Gibbs-Sampling:', num2str(n), '/', num2str(Niter)];
+        disp(DISP);
+    end
     % Sample z and s sequences given data, transition distributions,
     % HMM-state-specific mixture weights, and emission parameters:
     if strcmp(obsModelType,'SLDS')

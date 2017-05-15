@@ -5,10 +5,13 @@ function train_task_demo()
     cd(rootPath); 
     
     LearnedModelPath  = strcat(modelPath, 'TASK');
-        cd (LearnedModelPath);
-        delete *;
-        for train_task_id = 20:20
-            train_task(train_task_id, TRAINING_DATASET_PATH, LearnedModelPath);
-        end
+    if (exist(LearnedModelPath,'dir') == 0)
+        mkdir(LearnedModelPath);
+    end
+    cd (LearnedModelPath);
+    delete *;
+    for train_task_id = 20:20 %for REAL:20
+        train_task(train_task_id, TRAINING_DATASET_PATH, LearnedModelPath);
+    end
    cd (rootPath)
 end

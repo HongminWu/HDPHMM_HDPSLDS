@@ -8,18 +8,28 @@ global rootPath modelPath TESTING_DATASET_PATH TESTING_RESULTS_PATH
 global METHOD ROBOT TASK STATE TRUNCATION_STATES TRUNCATION_COMPONENTS
 global TRAINING_SUCCESS_FAILURE TRAINING_SIM_REAL
 global TESTING_SUCCESS_FAILURE TESTING_SIM_REAL
-global COLOR TESTING_PLOT_ON 
+global COLOR TESTING_PLOT_ON THRESHOLD_PATH DIS_PERIOD
                                           
 %% Training Model
 learnedModel = {};
 model = [];
 
 for nlearnedModel = 1 : length(STATE)
-    % Load Model for selected state. We will compare other observations with this.
+        %find out the optimal for each state, this step is achieved by function "calculate_state_threshold"
+        thresholdPath  = strcat(THRESHOLD_PATH, char(STATE(nState)));
+        if (exist(thresholdPath,'dir') == 0)
+            disp('Please define the optimal model for each state before testing? Training -> Model Selection -> Testing');
+            break;
+        end
+        cd(thresholdPath);
+        model_select    = load(strcat('MODEL_SELECTION_METHOD_',char(STATE(nState)),'.mat'),'MODEL_SELECTION_METHOD');
+        [~, optimalIdx] = max(model_select);
+        
+        % Load Model for selected state. We will compare other observations with this.
         cd (strcat(modelPath,char(STATE(nlearnedModel))));
         file         = dir('*.mat');
         meanmodel = [];    
-        trained_model_name = file(1).name;
+        trained_model_name = file(optimalIdx).name;
         meanmodel    = load(trained_model_name);                                 %for initializating the 'meanmodel'
   %{      
     for nfile        = 1 : size(file,1)
@@ -56,17 +66,18 @@ cd(rootPath);
 gHandle_testing = figure;
 title(strcat('Testing: The likelihood of testing trial w.r.t the learned model'));
 sensor = [];
+%threshold = []; 
 temp_log_likelihood = zeros(length(STATE),1);
 total_log_likelihood = [];
 %% Inference using training model and testing trial
-settings.Kz             =  TRUNCATION_STATES;  % nStats
+settings.Kz             =  TRUNCATION_STATES;      % nStats
 settings.Ks             =  TRUNCATION_COMPONENTS;  % nComponents of mixture gaussian
 data_struct             = struct;
 left                    = 0.1; 
 bottow                  = 0.1; 
 width                   = 0.8; 
 heigh                   = 0.4;
-trans                   = 1;
+trans                   = 0;
 data                    = data_preprocessing(data); % mean = 0 and covariance = Unit matrix
 
 obsModel            = learnedModel{nlearnedModel}.obsModel;
@@ -76,19 +87,21 @@ if strcmp(obsModelType,'AR')
     r = r + obsModel.r;
 end
 
-vis_period = 50;
-for obsIdx = r:length(data)  
-    if rem(obsIdx, vis_period) == 0     
+for obsIdx = r:length(data)     
+    if rem(obsIdx, DIS_PERIOD) == 0     
         disp(strcat('Testing: obsIdx = ',num2str(obsIdx),'/',num2str(length(data))));
     end
     %load different learned model at different state
-    if ismember(obsIdx, R_State(:,2:end-1))
-        sensor = [];
+    if ismember(obsIdx - obsModel.r, R_State(:,1:end-1))
+        sensor    = [];
+        %threshold = [];
         gridxy(R_State(:,2:end-1),'Linestyle','-','Color',[.5 .5 .5],'linewidth',2);
-        trans = trans + 1;
-    end
-    if strcmp(obsModelType,'AR') & (obsIdx == r | ismember(obsIdx, R_State(:,2:end-1)))
-        sensor =  data(:, obsIdx - obsModel.r: obsIdx);
+        trans     = trans + 1;
+        if strcmp(obsModelType,'AR')
+            sensor =  data(:, (obsIdx - obsModel.r): obsIdx);
+        end 
+        %load the threshold 
+        %threshold  = load(strcat(THRESHOLD_PATH, METHOD,'_', char(STATE(trans)),'/','THRESHOLD_',char(STATE(trans)),'.mat'));
     end
     sensor                  = [sensor, data(:,obsIdx)];
     data_struct.obs         = sensor;
@@ -117,10 +130,10 @@ for obsIdx = r:length(data)
     total_log_likelihood = [total_log_likelihood, temp_log_likelihood]; %store the results
     
     if TESTING_PLOT_ON & ((rem(obsIdx, vis_period) == 0) | ismember(obsIdx, R_State(:,end)))         
-        %info: subplot('position',[left bottom width height]) range from 0.0 to 1.0
-        %subplot_1 = subplot(1,1,1,'position', [left bottow + heigh  width heigh],'Parent',gHandle_testing);
         clf(gHandle_testing);
-        subplot_1 = subplot(2,1,1,'Parent',gHandle_testing);
+%         subplot_1 = subplot(2,1,1,'position', [left bottow + heigh  width heigh],'Parent',gHandle_testing);
+        subplot_1 = subplot(1,1,1,'Parent',gHandle_testing);
+%        plot(threshold.threshold','c--');              
         for sIdx = 1 : size(total_log_likelihood,1)
             title({'Given the learned model for each state, calculate the log-likelihood of the continuous observations';...                                                                                                                        
                   strcat('TrainingModels: ', METHOD,'-',ROBOT,'-',TASK,'-',TRAINING_SIM_REAL,'-', TRAINING_SUCCESS_FAILURE) ; ...
@@ -137,7 +150,11 @@ for obsIdx = r:length(data)
             gridxy(R_State(:,2:trans),'Linestyle','-','Color',[.5 .5 .5],'linewidth',2);
             hold on;
         end
-        %
+
+        
+        
+        
+        %{
         %Evoluting data 
         subplot_2 = subplot(2,1,2,'position', [left bottow width heigh],'Parent',gHandle_testing);
         cla(subplot_2);
@@ -147,6 +164,7 @@ for obsIdx = r:length(data)
         gridxy(obsIdx,'Linestyle','-','Color',[.5 .5 .5],'linewidth',0.6);
         xlim([0  length(data)]);
         %}
+        
         pause(0.000001);  
     end   
 end

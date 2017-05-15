@@ -22,12 +22,17 @@ d = size(sensor,1); % number of dimensitionality.
 switch METHOD
     case 'sHDPHMM'
         caseNumber = 2;  %Observation mode type 
-    case 'HDPVARHMM'
+    case 'HDPVARHMM(1)'
         caseNumber = 3;  %Observation mode type 
+    case 'HDPVARHMM(2)'
+        caseNumber = 4;  %Observation mode type 
     case 'HDPSLDS'
 end
 
-cd (saveDir); delete *; cd (rootPath);
+cd (saveDir); 
+delete *; 
+cd (rootPath);
+
 switch caseNumber
     case 1
         obsModelType = 'Gaussian';

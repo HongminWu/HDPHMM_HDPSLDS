@@ -8,30 +8,19 @@
 function [data, R_State, foldname] = load_one_trial(trialID, dataset_path)
 global SIGNAL_TYPE
 
-cd(dataset_path); %test dataset
-folders = dir;
-id = 0;
-while true
-     id = id + 1;
-     if(folders(id).isdir == 1 && ~strcmp(folders(id).name,'..') && ~strcmp(folders(id).name,'.') && ~strcmp(folders(id).name,'.git'))
-        id = id - 1;
-         break;
-     end
-end
-id = id + trialID;
-
-foldname = folders(id).name;
-cd(foldname);
+folder_name = dir([strcat(dataset_path,'/') '*' num2str(trialID)]);
+foldname    = folder_name.name;
+cd(strcat(dataset_path,'/',foldname))
 data = [];
+raw_data = [];
 for j = 1: length(SIGNAL_TYPE)
     file = dir([char(SIGNAL_TYPE(j)) '.dat*']);
     filename = strcat('/',foldname,'/',file(1).name);
     raw_data = load(filename);
     d = raw_data(:,2:end);  %delete the time column   
-     if strcmp(SIGNAL_TYPE(j), 'R_Torques')             
-%         d = unique(d,'rows','stable');
-         d = [d,[d(1,:);diff(d)]];
-     end
+%      if strcmp(SIGNAL_TYPE(j), 'R_Torques')             
+%          d = [d,[d(1,:);diff(d)]];
+%      end
     data = [data, d];
 end
 

@@ -8,7 +8,7 @@ clear global;
     disp('........................................');
     disp('.');
     disp(strcat('Testing_Observations:', TESTING_DATASET_PATH));
- for testing_trial = 3:8 % for testing each state
+ for testing_trial = 3:5 % for testing each state
     close all;
     test_task(testing_trial)
  end
