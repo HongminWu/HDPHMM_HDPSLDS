@@ -18,9 +18,9 @@ for j = 1: length(SIGNAL_TYPE)
     filename = strcat('/',foldname,'/',file(1).name);
     raw_data = load(filename);
     d = raw_data(:,2:end);  %delete the time column   
-%      if strcmp(SIGNAL_TYPE(j), 'R_Torques')             
-%          d = [d,[d(1,:);diff(d)]];
-%      end
+     if strcmp(SIGNAL_TYPE(j), 'R_Torques')             
+         d = [d,[d(1,:);diff(d)]];
+     end
     data = [data, d];
 end
 

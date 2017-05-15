@@ -13,9 +13,14 @@ function train_state_demo()
         end
         cd (LearnedModelPath);
         delete *;
-        for trialID = 7:14
+        for trialID = 2:21
             train_state(trialID, training_state, TRAINING_DATASET_PATH, LearnedModelPath);
         end
     end
+    
+    calculate_state_threshold; % Optimal model selection and Calculate the expected log-likelihood
+    
+    test_state_demo;
+    
    cd (rootPath)
 end

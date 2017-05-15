@@ -9,9 +9,13 @@ tic;
     disp('........................................');
     disp('.');
     disp(strcat('Testing_Observations:', TESTING_DATASET_PATH));
- for testing_trial =7:7 % for testing each state
+ for testing_trial =2:21 % for testing each state
     close all;
-    test_state(testing_trial)
+    %channel-#1
+    static_test_state(testing_trial);  % push the whole data as the observation, and get the results directly.
+    
+    %channel-#2
+    %dynamic_test_state(testing_trial); %Obtained the results by dynamical display the observation
  end
  cd (rootPath)
 toc;
