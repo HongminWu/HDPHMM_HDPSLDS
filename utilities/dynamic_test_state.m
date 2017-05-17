@@ -25,19 +25,16 @@ for nState = 1 : length(STATE)
             disp('Please define the optimal model for each state before testing? Training -> Model Selection -> Testing');
             break;
         end
-        cd(thresholdPath);
         
-         %load the model selection  
-        model_select    = load(strcat('MODEL_SELECTION_METHOD_',char(STATE(nState)),'.mat'),'MODEL_SELECTION_METHOD');
+        cd(thresholdPath);
+        % load the model selection
+        model_select = load(strcat('MODEL_SELECTION_METHOD_', chat(STATE(nState)), '.mat'));
         [~, optimalIdx] = max(model_select.MODEL_SELECTION_METHOD);
-        %load the likelihoods of the optimal 
-        likelihood = load(strcat(THRESHOLD_PATH, char(STATE(nState)),'/','LIKELIHOOD_',char(STATE(nState)),'.mat'),'LIKELIHOOD'); 
+        %load the optimal likelihoods  
+        likelihood                = load(strcat(THRESHOLD_PATH, char(STATE(nState)),'/','LIKELIHOOD_',char(STATE(nState)),'.mat')); 
         state_expected_likelihood = mean(likelihood.LIKELIHOOD{optimalIdx});
         sigma                     = sqrt(var(likelihood.LIKELIHOOD{optimalIdx}));
         stateThreshold            = state_expected_likelihood - c * sigma;
-        
-        expected_likelihood = [expected_likelihood, state_expected_likelihood];
-        threshold = [threshold, stateThreshold];
         
         % Load Model for selected state. We will compare other observations with this.
         cd (strcat(modelPath,char(STATE(nState))));

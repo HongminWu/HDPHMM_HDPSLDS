@@ -176,7 +176,7 @@ end
 for n=n_start:Niter
     
     if (rem(n, DIS_PERIOD) == 0)
-        DISP = [num2str(trialID),'-Training State: ', stateName, '-Gibbs-Sampling:', num2str(n), '/', num2str(Niter)];
+        DISP = [trialID,'-Training State: ', stateName, '-Gibbs-Sampling:', num2str(n), '/', num2str(Niter)];
         disp(DISP);
     end
     % Sample z and s sequences given data, transition distributions,

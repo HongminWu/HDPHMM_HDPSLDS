@@ -317,12 +317,12 @@ model.obsModel.mixtureType = 'infinite';
                                                   % Sticky HDP-HMM hyperparameters settings: 
                                                   % Gamma(1,0.01)prior on the (alpha0 + kappa0)
                                                   % alpha0_p_kappa0 = a_alpha / b_alpha; 
-model.HMMmodel.params.a_alpha=1;                 % default: 1 affects \pi_z
-model.HMMmodel.params.b_alpha=0.01;                  % default:0.01
+model.HMMmodel.params.a_alpha=1;                  % default: 1 affects \pi_z
+model.HMMmodel.params.b_alpha=0.01;               % default:0.01
 
                                                   % Gamma(1,0.01)prior on the concertration parapeters :gamma0 = a_gamma / b_gamma;    % G0 concentration parameter
 model.HMMmodel.params.a_gamma=1;                  % default: 1 global expected # of HMM states (affects \beta)
-model.HMMmodel.params.b_gamma=0.01;                  % default:0.01
+model.HMMmodel.params.b_gamma=0.01;               % default:0.01
 if settings.Ks>1
     model.HMMmodel.params.a_sigma = 1;            % default: 1
     model.HMMmodel.params.b_sigma = 0.01;         % default: 0.01
@@ -339,7 +339,7 @@ switch obsModelType
     case 'Gaussian'
         model.HMMmodel.params.c=100;              %Beta(c, d) rho0 = c/(c+d)(In paper: rho = kappa/(kappa + alpha))
     case 'AR'
-        model.HMMmodel.params.c=10;                %Beta(c, d) rho0 = c/(c+d)(In paper: rho = kappa/(kappa + alpha))
+        model.HMMmodel.params.c=10;               %Beta(c, d) rho0 = c/(c+d)(In paper: rho = kappa/(kappa + alpha))
     case 'SLDS'
         model.HMMmodel.params.c=10;               %Beta(c, d) rho0 = c/(c+d)(In paper: rho = kappa/(kappa + alpha))
 end

@@ -6,9 +6,9 @@
 %OUTPUT: data R_state
 
 function [data, R_State, foldname] = load_one_trial(trialID, dataset_path)
-global SIGNAL_TYPE
+global SIGNAL_TYPE WRENCH_DERIVATIVE
 
-folder_name = dir([strcat(dataset_path,'/') '*' num2str(trialID)]);
+folder_name = dir([strcat(dataset_path,'/') '*' trialID]);
 foldname    = folder_name.name;
 cd(strcat(dataset_path,'/',foldname))
 data = [];
@@ -18,7 +18,7 @@ for j = 1: length(SIGNAL_TYPE)
     filename = strcat('/',foldname,'/',file(1).name);
     raw_data = load(filename);
     d = raw_data(:,2:end);  %delete the time column   
-     if strcmp(SIGNAL_TYPE(j), 'R_Torques')             
+     if strcmp(SIGNAL_TYPE(j), 'R_Torques') & WRENCH_DERIVATIVE             
          d = [d,[d(1,:);diff(d)]];
      end
     data = [data, d];

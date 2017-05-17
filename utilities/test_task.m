@@ -29,8 +29,8 @@ cd(rootPath);
     data                    = data_preprocessing(data);  %data_preprocessing !!!!!!!!!!!!!!!!!!!!!!
     sensor                  = [];
     log_likelihood          = [];
-cd (TESTING_RESULTS_PATH);
-    exlikhood = load('log_likelihood.mat');
+     cd (TESTING_RESULTS_PATH);
+     exlikhood = load('log_likelihood.mat');
  
 obsModel            = learnedModel.obsModel;
 obsModelType        = learnedModel.obsModel.type;
@@ -85,8 +85,8 @@ for obsIdx = r:length(data)
         xlim([0  length(data)]);
        % ylim([LoglikelihoodRange(1), LoglikelihoodRange(2)]);  
         gridxy(obsIdx,'Linestyle','-','Color',[.5 .5 .5],'linewidth',0.6);
-        hold on;
-        plot(exlikhood.log_likelihood, 'r--','LineWidth',3,'Parent',subplot_1);
+         hold on;
+         plot(exlikhood.log_likelihood, 'r--','LineWidth',3,'Parent',subplot_1);
         
         subplot_2 = subplot(2,1,2,'position', [left bottow width heigh],'Parent',gHandle_testing);
         plot(data(:,1:obsIdx)','Parent',subplot_2); % for animation
@@ -97,7 +97,10 @@ for obsIdx = r:length(data)
         pause(0.000001);
     end
 end
+if (exist(TESTING_RESULTS_PATH,'dir') == 0)
+    mkdir(TESTING_RESULTS_PATH);
+end
 cd (TESTING_RESULTS_PATH);
-%save('log_likelihood.mat','log_likelihood')
+save('log_likelihood.mat','log_likelihood')
 saveas(gHandle_testing, strcat(TESTING_SIM_REAL,'_',TESTING_SUCCESS_FAILURE,'_',foldname),'jpg');
 cd (rootPath);
