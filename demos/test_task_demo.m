@@ -1,4 +1,3 @@
-function test_task_demo()
 clc;
 clear;
 clear global;
@@ -15,4 +14,3 @@ clear global;
         test_task(trialIdx{idx})
      end
  cd (rootPath)
-end

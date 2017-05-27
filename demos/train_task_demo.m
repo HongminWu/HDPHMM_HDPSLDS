@@ -1,4 +1,3 @@
-function train_task_demo()
     clc;
     clear global;
     global_variables;
@@ -16,4 +15,3 @@ function train_task_demo()
         train_task(trialIdx{idx}, TRAINING_DATASET_PATH, LearnedModelPath);
     end
    cd (rootPath)
-end

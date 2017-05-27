@@ -1,4 +1,3 @@
-function train_state_demo()
     clc;
     clear global;
     global_variables;
@@ -20,6 +19,5 @@ function train_state_demo()
     %calculate_state_threshold; % Optimal model selection and Calculate the expected log-likelihood
     
     test_state_demo;
-    
+ 
    cd (rootPath)
-end

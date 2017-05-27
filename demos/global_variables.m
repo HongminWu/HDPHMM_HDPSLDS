@@ -1,3 +1,4 @@
+function global_variables()
 clear global;
 clc; 
 global rootPath rootDATApath modelPath TRAINING_DATASET_PATH TESTING_DATASET_PATH TESTING_RESULTS_PATH THRESHOLD_PATH saveDir %path
@@ -13,7 +14,7 @@ TRUNCATION_COMPONENTS       = 1;     %components of mixture gaussian: truncation
 DIS_PERIOD                  = 50;    %define the display period for echoing the the screen
 CONST_C                     = 2;
 TIME_STEP                   = 0.005; %time-step for recording the signals
-METHOD                      = 'HDPVARHMM(2)'; %sHDPHMM, HDPVARHMM(1),HDPVARHMM(2)
+METHOD                      = 'HDPVARHMM(1)'; %sHDPHMM, HDPVARHMM(1),HDPVARHMM(2)
 ROBOT                       = 'HIRO'; %HIRO BAXTER
 TASK                        = 'SA';   %SA  PICK_N_PLACE
 STATE                       = {'APPROACH', 'ROTATION', 'INSERTION', 'MATING'};
@@ -61,4 +62,4 @@ FALSE_NEGATIVE              = 0;  % SUCCESS -> predicted as ->  FAILURE
 FALSE_POSITIVE              = 0;  %  FAILURE -> predicted as ->  SUCCESS 
 TRUE_NEGATIVE               = 0;  %  FAILURE -> predicted as ->  FAILURE 
 TIME_PERCENT                = zeros(1,length(STATE));
-
+end
