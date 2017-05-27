@@ -12,13 +12,14 @@ clc;
 close all;
 global_variables;
 global modelPath STATE TRAINING_DATASET_PATH THRESHOLD_PATH PLOT_SAVE
-[APPROACH, ROTATION, INSERTION, MATING] = deal(1,2,3,4);
 c       = 2.0; %for calculating the threshood
-for nState = APPROACH : MATING
+for nState = 1 : length(STATE)
     data_struct = struct;
     % Load Model for selected state.
     learnedModel = {};
     FILE_ID      = {};
+    
+    cd(strcat(modelPath,char(STATE(nState))));
     file            = dir([strcat(modelPath,char(STATE(nState)),'/') '*.mat']);
     if ~isempty(varargin)      % for loading given trained model
         file    = [];
@@ -37,7 +38,7 @@ for nState = APPROACH : MATING
     end
     
     %cd saving path
-    thresholdPath  = strcat(THRESHOLD_PATH, char(STATE(nState)));
+    thresholdPath  = strcat(THRESHOLD_PATH,char(STATE(nState)));
     if (exist(thresholdPath,'dir') == 0)
         mkdir(thresholdPath);
     end
@@ -60,6 +61,9 @@ for nState = APPROACH : MATING
         %step2-2: load N-1 learned models
         obsModel            = learnedModel{1}.obsModel;
         obsModelType        = learnedModel{1}.obsModel.type;
+        if ~strcmp(obsModelType,'AR')
+            obsModel.r = 0;
+        end
         log_likelihood = zeros(length(modelIdx),length(data) - obsModel.r);
         for m = 1:length(modelIdx) % for each trained model
            % calculate the likelihoood

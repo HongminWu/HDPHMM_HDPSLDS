@@ -6,11 +6,12 @@ clear global;
 global TESTING_SIM_REAL TESTING_SUCCESS_FAILURE TESTING_DATASET 
 global rootPath  rootDATApath TESTING_DATASET_PATH TESTING_RESULTS_PATH   
 global TRUE_POSITIVE  FALSE_NEGATIVE FALSE_POSITIVE TRUE_NEGATIVE
+
+
 succIdx1  = {'02','03','04','05','06','07','08','09','10','11'};
 succIdx2  = {'12','13','14','15','16','17','18','19','20','21'};
 failIdx1  = {'02','03','04','05','06','07','08','09'};
 failIdx2  = {'10','11','12','13','14','15','16','17'};
-
 succ = {succIdx1,succIdx2};
 fail = {failIdx1,failIdx2};
 %2-fold
@@ -18,6 +19,18 @@ fail = {failIdx1,failIdx2};
 %     comb_2    ={succIdx1, failIdx2};
 %     comb_3    ={succIdx2,failIdx1};
 %     comb_4    ={succIdx2,failIdx2};
+
+% succIdx1  = {'02','03','04','05','06'};
+% succIdx2  =  {'07','08','09','10','11'};
+% succIdx3  = {'12','13','14','15','16'};
+% succIdx4  = {'17','18','19','20','21'};
+% failIdx1  = {'02','03','04','05'};
+% failIdx2=  {'06','07','08','09'};
+% failIdx3  = {'10','11','12','13'};
+% failIdx4 = {'14','15','16','17'};
+% succ = {succIdx1,succIdx2,succIdx3,succIdx4};
+% fail =   {failIdx1,failIdx2,failIdx3,failIdx4};
+
 nCross   = 0;
 ROC      = [];
 for idx = 1:length(succ)     
@@ -57,9 +70,10 @@ for idx = 1:length(succ)
     end
 end
 
+figure;
 ROC = sortrows(ROC, 1);
 plot(ROC(:,1), ROC(:,2), 'r-','LineWidth', 3);
-title('ROC for HDP-VAR-HMM');
+title('ROC by HDP-VAR-HMM');
 xlabel('False Positive Rate');
 ylabel('True Positive Rate');
 end
